@@ -1,0 +1,52 @@
+.activation-page-container-custom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    background-color: #f5f5f5;
+  }
+  
+  .activation-card-custom {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .activation-title-custom {
+    margin-bottom: 1rem;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+  
+  .activation-message-custom {
+    margin-bottom: 1.2rem;
+    line-height: 1.6;
+    color: #555;
+  }
+  
+  .activation-error-custom {
+    color: #f44336; /* قرمز */
+  }
+  
+  .activation-success-custom {
+    color: #4caf50; /* سبز */
+  }
+  
+  .activation-btn-custom {
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  
+  .activation-btn-custom:hover {
+    background-color: #0056b3;
+  }
+  

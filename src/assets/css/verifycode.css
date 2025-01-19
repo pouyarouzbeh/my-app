@@ -1,0 +1,131 @@
+/* برگهٔ اصلی که محتوا در آن قرار دارد (برای مرکزچین کردن عمودی و افقی) */
+.verify-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    direction: rtl; /* جهت کلی صفحه راست به چپ */
+  }
+  
+  /* کارت یا Container اصلی */
+  .verify-container {
+    width: 100%;
+    max-width: 400px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    padding: 2rem;
+    text-align: center;
+  
+    /* انیمیشن ورود (fadeIn) */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.8s forwards ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* عنوان */
+  .verify-title {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  /* متن توضیحی */
+  .verify-subtitle {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 1.5rem;
+    line-height: 1.7em;
+  }
+  
+  /* بخش اینپوت‌ها (کد چهار رقمی) */
+  .input-fields {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+    margin-bottom: 1.8rem;
+  
+    /* تنظیم جهت فیلدها به چپ به راست */
+    direction: ltr;
+  }
+  
+  .verify-input {
+    width: 50px;
+    height: 60px;
+    font-size: 2rem;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    outline: none;
+    color: #333;
+  
+    /* اضافه شده برای چپ به راست شدن تایپ درون اینپوت */
+    direction: ltr;
+  }
+  
+  .verify-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
+    transform: scale(1.05);
+  }
+  
+  /* دکمهٔ تأیید */
+  .verify-button {
+    width: 70%;
+    padding: 0.8rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #64236e;
+    color: #fff;
+    transition: background-color 0.3s ease;
+    font-weight: 600;
+  }
+  
+  .verify-button:hover {
+    background-color: #782f70;
+  }
+  
+  /* بخش مربوط به ارسال مجدد کد */
+  .resend-section {
+    margin-top: 1rem;
+  }
+  
+  .resend-text {
+    font-size: 0.95rem;
+    color: #555;
+  }
+  
+  .timer {
+    color: #6366f1;
+    font-weight: bold;
+    margin: 0 4px;
+  }
+  
+  .resend-button {
+    background: none;
+    border: 1px solid #ccc6c6;
+    background-color: #cbdbe2;
+    color: #000000;
+    font-size: 0.95rem;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+  }
+  
+  .resend-button:hover {
+    background-color: #687aad;
+    color: #fff;
+  }
+  

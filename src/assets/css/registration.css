@@ -1,0 +1,209 @@
+
+
+.registration-form-container{
+  width: 70%;
+  direction: rtl;
+}
+
+@media (max-width: 768px) {
+  .registration-form-container {
+    width: 90%;
+  }
+}
+
+
+.form-group.current_term {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0 25px;
+}
+
+
+.term-display{
+  direction: ltr;
+}
+
+
+.form-group.current_term .form-control {
+  width: 100%;
+  max-width: 250px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: rgb(239, 239, 255);
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease;
+}
+
+.form-group.current_term .form-control:hover{
+  transform: translateY(1px);
+}
+
+.form-group.current_term .form-control:focus {
+  border-color: #65477a;
+  box-shadow: 0px 0px 8px rgba(101, 71, 122, 0.5);
+}
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+  .form-group.current_term {
+    align-items: center;
+  }
+
+  .form-group.current_term .form-control {
+    width: 90%;
+    max-width: 100%;
+  }
+
+  .form-group.current_term .select-label {
+    text-align: center;
+  }
+}
+
+
+ .registration-form {
+    margin-top: 5rem;
+    text-align: center;
+    
+  }
+  
+  .registration-form h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #444;
+  }
+  
+  .registration-form p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .registration-form-info {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  /* Accordion Styles */
+  .registration-accordion .accordion-item {
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .registration-accordion .accordion-button {
+    background-color: #f1f1f1;
+    color: #333;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .registration-accordion .accordion-button:focus {
+    box-shadow: none;
+  }
+  
+  .registration-accordion .accordion-button:hover {
+    background-color: #7e6292;
+    color: white;
+  }
+  
+  .registration-accordion .accordion-collapse {
+    margin-top: 10px;
+  }
+  
+  .registration-accordion .accordion-body {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* List Item Styles */
+  .registration-list-group .list-group-item {
+    background-color: #fff;
+    padding: 12px 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.6s ease;
+  }
+  
+  .registration-list-group .list-group-item:hover {
+    transform: translateY(-2px);
+  }
+  
+  .registration-list-group .list-group-item .btn {
+    transition: background-color 0.6s ease, transform 0.6s ease;
+    border-radius: 10px;
+  }
+  
+  /* Primary Button */
+  .registration-list-group .list-group-item .btn-primary {
+    background-color: #7e6292;
+    color: white;
+    border-radius: 15px;
+    border: none;
+    padding: 6px 15px;
+    transition: background-color 0.6s ease, transform 0.6s ease;
+  }
+  
+  .registration-list-group .list-group-item .btn-primary:hover {
+    background-color: #6a4a77;
+    transform: translateY(-1px);
+  }
+  
+  /* Danger Button */
+  .registration-list-group .list-group-item .btn-danger {
+    background-color: #ff4d4d;
+    color: white;
+    border-radius: 15px;
+    padding: 6px 15px;
+    transition: background-color 0.6s ease, transform 0.6s ease;
+  }
+  
+  .registration-list-group .list-group-item .btn-danger:hover {
+    background-color: #e74c3c;
+    transform: translateY(-2px);
+  }
+  
+  /* Submit Button */
+  .registration-form-submit-btn {
+    margin-top: 3rem;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: #65477a;
+    color: white;
+    font-size: 16px;
+    transition: 0.4s ease;
+  }
+  
+  .registration-form-submit-btn:hover {
+    background-color: #7f6788;
+    transform: translateY(-2px);
+  }
+  
+  /* Media Queries for Responsiveness */
+  @media (max-width: 768px) {
+    .container {
+      width: 100%;
+    }
+  
+    .registration-form-submit-btn {
+      width: 100%;
+    }
+  
+    .registration-accordion .accordion-button {
+      font-size: 14px;
+    }
+  }
+  

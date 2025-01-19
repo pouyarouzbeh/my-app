@@ -1,0 +1,52 @@
+/* src/assets/css/editprofile.css */
+
+.edit-profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9feff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .edit-profile-form .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .edit-profile-form .form-control {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+  }
+  
+  .edit-profile-form .btn-primary {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    transition: 0.5s;
+  }
+  
+.btn-primary:hover{
+  background-color: rgb(103, 70, 168);
+}
+
+  .edit-profile-error-notification,
+  .edit-profile-success-notification {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 5px;
+  }
+  
+  .edit-profile-error-notification {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .edit-profile-success-notification {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .save_editinfo_btn{
+    background-color: rgb(84, 31, 134);
+    border: black;
+  }

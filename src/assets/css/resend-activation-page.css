@@ -1,0 +1,58 @@
+.resend-activation-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    background-color: #fafafa;
+  }
+  
+  .resend-activation-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 480px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .resend-activation-title {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+  
+  .resend-activation-description {
+    margin-bottom: 1.2rem;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .resend-activation-btn {
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  
+  .resend-activation-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .resend-activation-message {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  .resend-activation-error {
+    color: #f44336;
+  }
+  
+  .resend-activation-success {
+    color: #4caf50;
+  }
+  

@@ -1,0 +1,308 @@
+.vorood-txt {
+    font-size: 25px;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+
+.whole_page {
+    display: flex;
+    background-color: rgba(167, 193, 215, 0.7);
+    border-radius: 30px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    margin-top: 80px;
+}
+
+
+.login-form {
+    max-width: 370px;
+    width: 100%;
+    padding: 20px;
+    background-color: azure;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    direction: rtl;
+}
+
+
+.pic {
+    max-width: 210px;
+    padding: 10px;
+    margin: 60px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.pic:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+.btn1 {
+    background-color: rgb(122, 100, 211);
+    font-size: 18px;
+    color: white;
+    border-radius: 20px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn1:hover {
+    background-color: rgb(105, 65, 140);
+    color: rgb(255, 255, 255);
+    transform: translateY(-2px);
+}
+
+
+
+/* استایل لینک فراموشی رمز عبور */
+.forget {
+    text-decoration: none;
+    font-size: 14px;
+    color: #333;
+    transition:0.3s;
+}
+
+.forget:hover {
+    color: whitesmoke;
+    background-color:rgb(105, 65, 140);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* استایل فرم گروه‌ها */
+.form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+
+  
+
+.form-group label {
+    position: absolute;
+    top: 50%;
+    right: auto;
+    transform: translateY(-50%);
+    padding: 0 5px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    color: #6c757d;
+}
+
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label {
+    top: -10px;
+    color: rgb(103, 54, 146);
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 0.95rem;
+    padding: 10px;
+    transition: all 0.3s ease;
+    text-align: left; 
+    direction: ltr; 
+}
+
+
+.form-control:focus {
+    border-color: rgb(85, 42, 122);
+    box-shadow: 0 0 0 0.2rem rgba(103, 54, 146, 0.25);
+}
+
+/* استایل برای حالت‌های مختلف صفحه */
+@media (max-width: 768px) {
+    .whole_page {
+        flex-direction: column;
+        padding: 10px;
+        margin-top: 0px;
+    }
+
+    .login-form {
+        margin: 0;
+        padding: 20px;
+        box-shadow: none;
+        background-color: azure;
+    }
+
+    .pic {
+        max-width: 100px;
+        margin: 8px;
+    }
+
+    .vorood-txt {
+        font-size: 22px;
+        margin: 20px 0;
+    }
+
+    .form-group input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .form-group label {
+        left: 8px;
+        font-size: 0.9rem;
+    }
+
+    .btn1 {
+        font-size: 16px;
+        padding: 10px;
+        margin-top: 20px;
+    }
+
+    .forget {
+        font-size: 14px;
+    }
+}
+
+
+
+@media (max-width: 768px) {
+    .container1{
+        width: 100%;
+    }
+}
+
+.password-wrapper {
+    position: relative;
+  }
+  
+  .password-toggle {
+    position: absolute;
+    right: 5px;
+    color: #ccc;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+
+ 
+  
+
+
+  .error_message {
+    color: rgb(167, 93, 93);
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+    opacity: 0;
+    animation: slideInLeft 0.5s ease forwards 0.3s; /* انیمیشن برای ورود پیام */
+    padding: 5px;
+    background-color: #ffd8d8;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin-top: 10px;
+    text-align: right;
+}
+
+@keyframes slideInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+a{
+    text-decoration: none;
+}
+
+.signup-text{
+    padding: auto;
+    margin: 0;  
+}
+
+.signup-text span{
+    color: rgb(73, 73, 255);
+    cursor: pointer;
+    transition: 0.5s;
+    padding: 5px;
+    border-radius: 20px;
+}
+
+.signup-text span:hover{
+   color: rgb(91, 45, 113);  
+}
+
+
+  
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: relative;
+    gap: 15px; /* فاصله بین تب‌ها */
+}
+
+.tab-btn {
+    background: linear-gradient(145deg, #f5f5f5, #e8e8e8);
+    border: 2px solid #ccc;
+    padding: 10px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #666;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(255, 255, 255, 0.3);
+    position: relative;
+}
+
+.tab-btn.active {
+    color: white;
+    background: linear-gradient(145deg, rgb(103, 54, 146), rgb(85, 42, 122));
+    border-color: rgb(103, 54, 146);
+    box-shadow: 0 4px 10px rgba(103, 54, 146, 0.5);
+    transform: translateY(-2px); /* کمی بلندتر برای نمایش فعال بودن */
+}
+
+.tab-btn:hover {
+    background: linear-gradient(145deg, rgb(167, 139, 202), rgb(103, 54, 146));
+    color: #fff;
+    border-color: rgba(103, 54, 146, 0.8);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(103, 54, 146, 0.4);
+}
+
+.tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0%;
+    height: 3px;
+    background-color: rgb(103, 54, 146);
+    transition: width 0.3s ease;
+}
+
+.tab-btn.active::after {
+    width: 60%;
+}
+
+  
+
+.entry_btn1{
+    color: #ffffff;
+}
+
+input[type="password"]::-ms-reveal, 
+input[type="password"]::-webkit-contacts-auto-fill-button, 
+input[type="password"]::-webkit-asterisk, 
+input[type="password"]::-webkit-input-placeholder, 
+input[type="password"]::-webkit-clear-button, 
+input[type="password"]::-webkit-inner-spin-button {
+  display: none !important;
+}

@@ -1,0 +1,216 @@
+/* src/assets/css/common.css */
+
+/* Reset و تنظیمات پایه */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: #333;
+  direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa; /* پس‌زمینه نرم‌تر برای کل صفحه */
+}
+
+/* Navbar Styles */
+.navbar {
+  background-color: #f9fffd; /* رنگ سفید برای ظاهری تمیز */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* سایه نرم */
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo {
+  width: 60px;
+  height: auto;
+}
+
+.uni {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #2c3e50; /* رنگی تیره‌تر برای خوانایی بهتر */
+}
+
+/* Toggle Button */
+.navbar-toggler {
+  border: none;
+  background-color: transparent;
+}
+
+.navbar-toggler-icon {
+  width: 25px;
+  height: 3px;
+  background-color: #2c3e50;
+  display: block;
+  position: relative;
+}
+
+.navbar-toggler-icon::before,
+.navbar-toggler-icon::after {
+  content: '';
+  width: 25px;
+  height: 3px;
+  background-color: #2c3e50;
+  position: absolute;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler-icon::before {
+  top: -8px;
+}
+
+.navbar-toggler-icon::after {
+  top: 8px;
+}
+
+/* Navbar Links */
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  color: #2c3e50;
+  margin-right: 1.5rem;
+  font-size: 1rem;
+  border-radius: 20px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #ffffff;
+  background-color: #2c3e50;
+  border-radius: 20px;
+}
+
+/* User Section */
+.user-section {
+  display: flex;
+  align-items: center;
+}
+
+.user-name {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  color: #2c3e50;
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  background-color: #2c3e50;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 15px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.dropdown-toggle:hover,
+.dropdown-toggle:focus ,
+.dropdown-toggle::after{
+  background-color: #677684;
+  transform: translateY(-2px);
+}
+
+.dropdown-menu {
+  background-color: #ececec;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  color: #2c3e50;
+  padding: 0.75rem 1.5rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1;
+  color: #1a252f;
+}
+
+.dropdown-divider {
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Logout Button */
+.logout-button {
+  display: flex;
+  align-items: center;
+  color: #e74c3c;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.logout-button:hover {
+  color: #c0392b;
+}
+
+/* Login Link */
+.login-link {
+  background-color: #2c3e50;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.login-link:hover {
+  background-color: #677684;
+  text-decoration: none;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .navbar-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-link {
+    margin: 0.5rem 0;
+  }
+
+  .user-section {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 1rem;
+  }
+
+  .dropdown-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Additional Styles */
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.badge-notification {
+  background-color: #e74c3c;
+  color: #ffffff;
+  border-radius: 50%;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+}
+
+.user-name{
+  color: #ffffff;
+}

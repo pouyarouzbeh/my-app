@@ -1,0 +1,17 @@
+[flake8]
+extend-ignore = E501, F401, F403, F405, W503
+exclude =
+    .git,
+    .gitignore,
+    *.pot,
+    *.py[co],
+    __pycache__,
+    docs/source/conf.py,
+    venv,
+    .env,
+    old,
+    build,
+    dist,
+    settings.py
+    __init__,
+max-complexity = 10

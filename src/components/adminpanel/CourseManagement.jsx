@@ -33,6 +33,10 @@ const CourseManagement = () => {
     prerequisite_course: [],
   });
 
+  // State‌های جدید برای مدال حذف
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState(null);
+
   // دریافت لیست درس‌ها و دسته‌بندی‌ها
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -136,23 +140,38 @@ const CourseManagement = () => {
     }
   };
 
-  // Delete course
-  const handleRemoveCourse = async (id) => {
-    if (!window.confirm("آیا مطمئن هستید می‌خواهید این درس را حذف کنید؟")) return;
+  // حذف درس با استفاده از مدال
+  const handleRemoveCourse = (course) => {
+    // این تابع فقط مدال را باز می‌کند و courseToDelete را ست می‌کند
+    setCourseToDelete(course);
+    setShowDeleteModal(true);
+  };
+
+  // تایید حذف درس از مدال
+  const handleConfirmDelete = async () => {
+    if (!courseToDelete) return;
+
     setLoading(true);
     setError("");
     setSuccess("");
 
     try {
-      await deleteCourseById(id);
+      await deleteCourseById(courseToDelete.id);
       setSuccess("درس با موفقیت حذف شد.");
       fetchData();
+      handleCloseDeleteModal();
     } catch (err) {
       console.error("خطا در حذف درس:", err);
       setError(err.response?.data?.message || "خطا در حذف درس.");
     } finally {
       setLoading(false);
     }
+  };
+
+  // بستن مدال حذف
+  const handleCloseDeleteModal = () => {
+    setCourseToDelete(null);
+    setShowDeleteModal(false);
   };
 
   // فیلتر کردن لیست درس‌ها بر اساس جستجو
@@ -306,31 +325,31 @@ const CourseManagement = () => {
       </form>
 
       {/* لیست درس‌ها در قالب جدول مشابه پنل ادمین جنگو */}
-      <Table striped bordered hover responsive>
-        <thead>
+      <Table striped bordered hover responsive >
+        <thead className="text-center">
           <tr>
-            <th>#</th>
-            <th>نام</th>
-            <th>تعداد واحد</th>
-            <th>دسته‌بندی</th>
-            <th>پیش‌نیازها</th>
-            <th>عملیات</th>
+            <th className="text-center">#</th>
+            <th className="text-center">نام</th>
+            <th className="text-center">تعداد واحد</th>
+            <th className="text-center">دسته‌بندی</th>
+            <th className="text-center">پیش‌نیازها</th>
+            <th className="text-center">عملیات</th>
           </tr>
         </thead>
         <tbody>
           {filteredCourses.length > 0 ? (
             filteredCourses.map((course, index) => (
               <tr key={course.id}>
-                <td>{index + 1}</td>
-                <td>{course.name}</td>
-                <td>{course.credit}</td>
-                <td>{course.category ? course.category.name : "نامشخص"}</td>
-                <td>
+                <td className="text-center">{index + 1}</td>
+                <td className="text-center">{course.name}</td>
+                <td className="text-center">{course.credit}</td>
+                <td className="text-center">{course.category ? course.category.name : "نامشخص"}</td>
+                <td className="text-center">
                   {course.prerequisite_course && course.prerequisite_course.length > 0
                     ? "دارد"
                     : "ندارد"}
                 </td>
-                <td>
+                <td className="text-center">
                   <button
                     onClick={() => handleOpenUpdateModal(course)}
                     className="btn btn-primary btn-sm me-2 edit_student_button"
@@ -339,7 +358,7 @@ const CourseManagement = () => {
                     ویرایش
                   </button>
                   <button
-                    onClick={() => handleRemoveCourse(course.id)}
+                    onClick={() => handleRemoveCourse(course)}
                     className="btn btn-danger btn-sm remove_student_button"
                     disabled={loading}
                   >
@@ -425,6 +444,33 @@ const CourseManagement = () => {
             </Button>
           </Modal.Footer>
         </Form>
+      </Modal>
+
+      {/* مدال حذف درس */}
+      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>حذف درس</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {courseToDelete ? (
+            <>
+              <p>
+                آیا مطمئن هستید که می‌خواهید درس <strong>{courseToDelete.name}</strong> را حذف کنید؟
+              </p>
+              <p className="text-danger">این عمل قابل بازگشت نیست!</p>
+            </>
+          ) : (
+            <p>در حال بارگذاری...</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseDeleteModal} disabled={loading}>
+            انصراف
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDelete} disabled={loading}>
+            حذف
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );

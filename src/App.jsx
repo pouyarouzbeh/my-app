@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
 import { AuthProvider, AuthContext } from "./components/context/AuthContext";
+import "./assets/css/fonts.css";
+import "./assets/css/app.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
@@ -13,9 +15,9 @@ import Profile from "./components/Profile";
 import EditProfile from "./components/EditProfile";
 // import VerifyCode from "./components/VerifyCode";
 import ChangePassword from "./components/ChangePassword";
-import ActivationPage from "./components/ActivationPage";
-import VerifyAccount from "./components/VerifyAccount";
-import ResendActivationPage from "./components/ResendActivationPage";
+// import ActivationPage from "./components/ActivationPage";
+// import VerifyAccount from "./components/VerifyAccount";
+// import ResendActivationPage from "./components/ResendActivationPage";
 
 
 // Routeهای محافظت‌شده
@@ -37,9 +39,9 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/accounts/api/v1/activation/confirm/<token/" element={<ActivationPage />} />
+        {/* <Route path="/accounts/api/v1/activation/confirm/<token/" element={<ActivationPage />} />
         <Route path="/activation-resend" element={<ResendActivationPage />} />
-        <Route path="/verify-account" element={<VerifyAccount />} />
+        <Route path="/verify-account" element={<VerifyAccount />} /> */}
         <Route path="/forget" element={<Forget />} />
         <Route path="/verify" element={<Verify />} />
         {/* مسیر پیش‌ثبت‌نام فقط درصورتی که کاربر لاگین کرده باشد */}

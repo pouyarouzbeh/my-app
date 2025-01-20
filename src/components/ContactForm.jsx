@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import { postContact } from "../utils/api"; // متد API برای ارسال پیام
-import "../assets/css/home.css"; // فایل CSS فرم تماس
+import { postContact } from "../utils/api"; 
+import Notification from "./adminpanel/Notification";
+import "../assets/css/home.css"; // 
 
 const ContactForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const [statusMessage, setStatusMessage] = useState(""); // پیام وضعیت
-  const [isSuccess, setIsSuccess] = useState(false); // وضعیت موفقیت یا خطا
-  const [showMessage, setShowMessage] = useState(false); // نمایش یا عدم نمایش پیام
+  const [notification, setNotification] = useState({ message: "", type: "" }); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,8 +23,10 @@ const ContactForm = () => {
     try {
       // ارسال فرم به سرور
       await postContact(contactData);
-      setStatusMessage("پیام شما با موفقیت ارسال شد.");
-      setIsSuccess(true);
+      setNotification({
+        message: "پیام شما با موفقیت ارسال شد.",
+        type: "success", // نوع موفقیت
+      });
 
       // پاک کردن فیلدهای فرم
       setName("");
@@ -33,16 +34,12 @@ const ContactForm = () => {
       setSubject("");
       setMessage("");
     } catch (error) {
-      setStatusMessage("ارسال پیام با خطا مواجه شد. لطفاً دوباره تلاش کنید.");
-      setIsSuccess(false);
+      setNotification({
+        message: "ارسال پیام با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
+        type: "error", // نوع خطا
+      });
       console.error("Error sending contact message:", error);
     }
-
-    // نمایش پیام برای مدت مشخص و سپس حذف
-    setShowMessage(true);
-    setTimeout(() => {
-      setShowMessage(false);
-    }, 3000); // پیام پس از ۳ ثانیه محو می‌شود
   };
 
   return (
@@ -53,15 +50,13 @@ const ContactForm = () => {
           اگر سوالی دارید یا نیاز به اطلاعات بیشتری دارید، لطفاً از طریق فرم زیر با ما تماس بگیرید.
         </p>
 
-        {/* پیام وضعیت */}
-        {showMessage && (
-          <div
-            className={`alert ${
-              isSuccess ? "alert-success" : "alert-danger"
-            } text-center`}
-          >
-            {statusMessage}
-          </div>
+        
+        {notification.message && (
+          <Notification
+            message={notification.message}
+            type={notification.type}
+            onClose={() => setNotification({ message: "", type: "" })} // بستن نوتیفیکیشن
+          />
         )}
 
         <form className="contact-form row g-3 justify-content-center" onSubmit={handleSubmit}>

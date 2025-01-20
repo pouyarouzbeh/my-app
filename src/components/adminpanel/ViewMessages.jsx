@@ -1,32 +1,35 @@
-import React, { useState, useEffect, useCallback } from "react";
+// src/components/administrator/ViewMessages.jsx
+
+import React, { useState, useEffect } from "react";
 import {
   getContacts,
   getContactById,
-  updateContactById,
-  deleteContactById
+  deleteContactById,
 } from "../../utils/api";
 
 import Notification from "./Notification";
 import "../../assets/css/administrator.css";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Spinner } from "react-bootstrap";
 
 const ViewMessages = () => {
-  const [contacts, setContacts] = useState([]); 
+  const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Modal State
-  const [showModal, setShowModal] = useState(false);
-  const [currentContact, setCurrentContact] = useState(null);
+  // Modal States
+  const [showViewModal, setShowViewModal] = useState(false);
   const [modalSubject, setModalSubject] = useState("");
   const [modalMessage, setModalMessage] = useState("");
   const [modalStatus, setModalStatus] = useState("");
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteContactId, setDeleteContactId] = useState(null);
+
   // =========================================================================
-  //  Fetch Contacts (Updated)
+  //  Fetch Contacts
   // =========================================================================
-  const fetchContacts = useCallback(async () => {
+  const fetchContacts = async () => {
     setLoading(true);
     setError("");
     setSuccess("");
@@ -35,7 +38,6 @@ const ViewMessages = () => {
       const response = await getContacts();
       console.log("Contacts Response:", response.data);
 
-      // تغییر برای دسترسی ایمن به داده‌ها
       const contactsData = response.data?.results || [];
       if (!Array.isArray(contactsData)) {
         throw new Error("فرمت داده‌های دریافتی اشتباه است.");
@@ -44,21 +46,23 @@ const ViewMessages = () => {
       setContacts(contactsData);
     } catch (err) {
       console.error("Error fetching contacts:", err);
-      setError(err.response?.data?.message || "خطا در دریافت پیام‌ها.");
+      setError(
+        err.response?.data?.message || "خطا در دریافت پیام‌ها."
+      );
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   // Fetch contacts on component mount
   useEffect(() => {
     fetchContacts();
-  }, [fetchContacts]);
+  }, []);
 
   // =========================================================================
-  //  Open Modal for Viewing/Updating Contact
+  //  Open Modal for Viewing Contact
   // =========================================================================
-  const handleOpenModal = async (contact) => {
+  const handleOpenViewModal = async (contact) => {
     setLoading(true);
     setError("");
     setSuccess("");
@@ -67,26 +71,25 @@ const ViewMessages = () => {
       const response = await getContactById(contact.id);
       const detailedContact = response.data;
       console.log("Detailed Contact Response:", response.data);
-
-      setCurrentContact(detailedContact);
       setModalSubject(detailedContact.subject || "");
       setModalMessage(detailedContact.message || "");
       setModalStatus(detailedContact.status || "مشاهده شده");
-      setShowModal(true);
+      setShowViewModal(true);
     } catch (err) {
       console.error("Error fetching contact details:", err);
-      setError(err.response?.data?.message || "خطا در دریافت جزئیات پیام.");
+      setError(
+        err.response?.data?.message || "خطا در دریافت جزئیات پیام."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   // =========================================================================
-  //  Close Modal
+  //  Close View Modal
   // =========================================================================
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setCurrentContact(null);
+  const handleCloseViewModal = () => {
+    setShowViewModal(false);
     setModalSubject("");
     setModalMessage("");
     setModalStatus("");
@@ -94,63 +97,42 @@ const ViewMessages = () => {
   };
 
   // =========================================================================
-  //  Update Contact (Updated)
+  //  Open Delete Confirmation Modal
   // =========================================================================
-  const handleSubmitUpdate = async (e) => {
-    e.preventDefault();
-    if (!currentContact) return;
-
-    console.log("Submitting Update:", { modalSubject, modalMessage, modalStatus });
-
-    setLoading(true);
-    setError("");
-    setSuccess("");
-
-    const updatedContact = {
-      subject: (modalSubject || "").trim(),
-      message: (modalMessage || "").trim(),
-      status: (modalStatus || "").trim(),
-    };
-
-    // Client-side Validation
-    if (!updatedContact.subject || !updatedContact.status) {
-      setError("لطفاً موضوع و وضعیت پیام را وارد کنید.");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      await updateContactById(currentContact.id, updatedContact);
-      setSuccess("پیام با موفقیت به‌روزرسانی شد.");
-      fetchContacts();
-      handleCloseModal();
-    } catch (err) {
-      console.error("Error updating contact:", err);
-      setError(err.response?.data?.message || "خطا در به‌روزرسانی پیام.");
-    } finally {
-      setLoading(false);
-    }
+  const handleOpenDeleteModal = (contactId) => {
+    setDeleteContactId(contactId);
+    setShowDeleteModal(true);
   };
 
   // =========================================================================
-  //  Delete Contact (Updated)
+  //  Close Delete Confirmation Modal
   // =========================================================================
-  const handleDeleteContact = async (id) => {
-    if (!window.confirm("آیا مطمئن هستید می‌خواهید این پیام را حذف کنید؟")) {
-      return;
-    }
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+    setDeleteContactId(null);
+    setError("");
+  };
+
+  // =========================================================================
+  //  Delete Contact
+  // =========================================================================
+  const handleDeleteContact = async () => {
+    if (!deleteContactId) return;
 
     setLoading(true);
     setError("");
     setSuccess("");
 
     try {
-      await deleteContactById(id);
-      setSuccess("پیام با موفقیت حذف شد.");
+      await deleteContactById(deleteContactId);
       fetchContacts();
+      setSuccess("پیام با موفقیت حذف شد.");
+      handleCloseDeleteModal();
     } catch (err) {
       console.error("Error deleting contact:", err);
-      setError(err.response?.data?.message || "خطا در حذف پیام.");
+      setError(
+        err.response?.data?.message || "خطا در حذف پیام."
+      );
     } finally {
       setLoading(false);
     }
@@ -180,7 +162,13 @@ const ViewMessages = () => {
           uniqueClass="view-messages-success-notification"
         />
       )}
-      {loading && <p className="text-info">در حال بارگذاری...</p>}
+      {loading && (
+        <div className="d-flex justify-content-center my-3">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">در حال بارگذاری...</span>
+          </Spinner>
+        </div>
+      )}
 
       {/* Messages List */}
       <ul className="list-group messages-list">
@@ -192,31 +180,36 @@ const ViewMessages = () => {
             <div className="message-summary">
               <strong>{contact.subject}</strong>
               <p className="mb-1">{contact.message.substring(0, 50)}...</p>
-              <span className="badge bg-secondary">{contact.status || "جدید"}</span>
+              <span className={`badge bg-${contact.status === "جدید" ? "primary" : contact.status === "مشاهده شده" ? "secondary" : "success"}`}>
+                {contact.status || "جدید"}
+              </span>
             </div>
             <div className="message-actions">
-              <button
-                onClick={() => handleOpenModal(contact)}
-                className="btn btn-info btn-sm me-2"
+              <Button
+                variant="info"
+                size="sm"
+                className="me-2"
+                onClick={() => handleOpenViewModal(contact)}
                 disabled={loading}
               >
                 مشاهده
-              </button>
-              <button
-                onClick={() => handleDeleteContact(contact.id)}
-                className="btn btn-danger btn-sm"
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => handleOpenDeleteModal(contact.id)}
                 disabled={loading}
               >
                 حذف
-              </button>
+              </Button>
             </div>
           </li>
         ))}
       </ul>
 
-      {/* View/Update Contact Modal */}
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Form onSubmit={handleSubmitUpdate}>
+      {/* View Contact Modal */}
+      <Modal show={showViewModal} onHide={handleCloseViewModal}>
+        <Form>
           <Modal.Header closeButton>
             <Modal.Title>جزئیات پیام</Modal.Title>
           </Modal.Header>
@@ -226,8 +219,7 @@ const ViewMessages = () => {
               <Form.Control
                 type="text"
                 value={modalSubject}
-                onChange={(e) => setModalSubject(e.target.value)}
-                required
+                readOnly
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="modalMessage">
@@ -236,33 +228,54 @@ const ViewMessages = () => {
                 as="textarea"
                 rows={4}
                 value={modalMessage}
-                onChange={(e) => setModalMessage(e.target.value)}
-                required
+                readOnly
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="modalStatus">
               <Form.Label>وضعیت</Form.Label>
-              <Form.Select
+              <Form.Control
+                type="text"
                 value={modalStatus}
-                onChange={(e) => setModalStatus(e.target.value)}
-                required
-              >
-                <option value="">انتخاب وضعیت</option>
-                <option value="جدید">جدید</option>
-                <option value="مشاهده شده">مشاهده شده</option>
-                <option value="پاسخ داده شده">پاسخ داده شده</option>
-              </Form.Select>
+                readOnly
+              />
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal} disabled={loading}>
+            <Button variant="secondary" onClick={handleCloseViewModal} disabled={loading}>
               بستن
-            </Button>
-            <Button variant="primary" type="submit" disabled={loading}>
-              ذخیره تغییرات
             </Button>
           </Modal.Footer>
         </Form>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>تایید حذف</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          آیا مطمئن هستید که می‌خواهید این پیام را حذف کنید؟
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseDeleteModal} disabled={loading}>
+            لغو
+          </Button>
+          <Button variant="danger" onClick={handleDeleteContact} disabled={loading}>
+            {loading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                /> در حال حذف...
+              </>
+            ) : (
+              "حذف"
+            )}
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );

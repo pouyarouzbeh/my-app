@@ -1,7 +1,7 @@
 // src/components/EditProfile.jsx
 
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   getProfileById,
   updateProfileById
@@ -15,6 +15,8 @@ import { AuthContext } from "./context/AuthContext";
 
 const EditProfile = () => {
   const { user, updateUser } = useContext(AuthContext); // دریافت اطلاعات کاربر از Context
+  const location = useLocation(); // دریافت location برای پیام از navigate
+  const navigate = useNavigate();
 
   // وضعیت‌های کامپوننت
   const [profile, setProfile] = useState({
@@ -27,10 +29,9 @@ const EditProfile = () => {
   });
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(location.state?.message || ""); // تنظیم پیام اولیه از state
   const [success, setSuccess] = useState("");
-  const navigate = useNavigate();
-
+  
   // دریافت اطلاعات پروفایل هنگام بارگذاری کامپوننت
   useEffect(() => {
     const fetchProfile = async () => {
@@ -40,7 +41,7 @@ const EditProfile = () => {
       }
 
       setLoading(true);
-      setError("");
+      setError(location.state?.message || ""); // تنظیم پیام از state در ابتدا
       try {
         const response = await getProfileById(user.id);
         setProfile({
@@ -60,7 +61,7 @@ const EditProfile = () => {
     };
 
     fetchProfile();
-  }, [user.id, user.isLoggedIn]);
+  }, [user.id, user.isLoggedIn, location.state]);
 
   // مدیریت تغییرات فرم
   const handleChange = (e) => {
@@ -71,26 +72,44 @@ const EditProfile = () => {
     }));
   };
 
-  // مدیریت ارسال فرم
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUpdating(true);
     setError("");
     setSuccess("");
 
-    // اعتبارسنجی ساده
-    if (!profile.email) {
-      setError("لطفاً ایمیل خود را وارد کنید.");
+    // اعتبارسنجی فرم
+    if (!profile.first_name.trim()) {
+      setError("لطفاً نام خود را وارد کنید.");
+      setUpdating(false);
+      return;
+    }
+
+    if (!profile.last_name.trim()) {
+      setError("لطفاً نام خانوادگی خود را وارد کنید.");
+      setUpdating(false);
+      return;
+    }
+
+    if (!profile.phone_number.trim()) {
+      setError("لطفاً شماره تماس خود را وارد کنید.");
+      setUpdating(false);
+      return;
+    }
+
+    // اعتبارسنجی شماره تلفن (اختیاری)
+    const phoneRegex = /^[0-9]{11}$/; // مثال: شماره تلفن 11 رقمی
+    if (!phoneRegex.test(profile.phone_number)) {
+      setError("لطفاً یک شماره تماس معتبر وارد کنید.");
       setUpdating(false);
       return;
     }
 
     try {
       await updateProfileById(user.id, profile);
-      // می‌خواهیم آخرین وضعیت از سرور بخوانیم
+      
       const { data: updatedData } = await getProfileById(user.id);
     
-      // حالا بروزرسانی کانتکست از آخرین دادهٔ واقعی سرور
       updateUser({
         email: updatedData.email,
         first_name: updatedData.first_name,
@@ -103,7 +122,7 @@ const EditProfile = () => {
       // هدایت به صفحه اصلی پس از نمایش پیغام موفقیت
       setTimeout(() => {
         navigate("/");
-      }, 1000); // ۲ ثانیه
+      }, 2000); // ۲ ثانیه
     } catch (err) {
       console.error("Error updating profile:", err);
       setError(err.response?.data?.message || "خطا در به‌روزرسانی پروفایل.");
@@ -155,7 +174,7 @@ const EditProfile = () => {
             />
           </Form.Group>
 
-          {/* ایمیل */}
+          {/* ایمیل (غیر قابل ویرایش) */}
           <Form.Group controlId="email" className="mb-3">
             <Form.Label>ایمیل</Form.Label>
             <Form.Control
@@ -169,35 +188,47 @@ const EditProfile = () => {
 
           {/* نام */}
           <Form.Group controlId="first_name" className="mb-3">
-            <Form.Label>نام</Form.Label>
+            <Form.Label>نام <span className="text-danger">*</span></Form.Label>
             <Form.Control
               type="text"
               name="first_name"
               value={profile.first_name}
+              className="text-start"
               onChange={handleChange}
+              required
+              placeholder="نام خود را وارد کنید"
             />
           </Form.Group>
 
           {/* نام خانوادگی */}
           <Form.Group controlId="last_name" className="mb-3">
-            <Form.Label>نام خانوادگی</Form.Label>
+            <Form.Label>نام خانوادگی <span className="text-danger">*</span></Form.Label>
             <Form.Control
               type="text"
               name="last_name"
               value={profile.last_name}
+              className="text-start"
               onChange={handleChange}
+              required
+              placeholder="نام خانوادگی خود را وارد کنید"
             />
           </Form.Group>
 
           {/* شماره تماس */}
           <Form.Group controlId="phone_number" className="mb-3">
-            <Form.Label>شماره تماس</Form.Label>
+            <Form.Label>شماره تماس <span className="text-danger">*</span></Form.Label>
             <Form.Control
               type="text"
               name="phone_number"
               value={profile.phone_number}
+              className="text-start"
               onChange={handleChange}
+              required
+              placeholder="شماره تماس خود را وارد کنید"
             />
+            <Form.Text className="text-muted">
+              لطفاً شماره تماس معتبر (11 رقمی) وارد کنید.
+            </Form.Text>
           </Form.Group>
 
           {/* افزودن فیلدهای بیشتر در صورت نیاز */}

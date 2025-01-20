@@ -1,6 +1,6 @@
 // src/components/adminpanel/AdminPanel.jsx
 import React, { useState } from "react";
-import { FaUserGraduate, FaBook, FaChartLine , FaSearch} from "react-icons/fa"; 
+import { FaUserGraduate, FaBook, FaChartLine , FaSearch, FaHome} from "react-icons/fa"; 
 
 
 import "../../assets/css/administrator.css"; 
@@ -9,13 +9,21 @@ import CourseManagement from "./CourseManagement";
 import Reports from "./Reports";
 import ViewMessages  from "./ViewMessages";
 import AllCourseHistories from "./AllCourseHistories";
+import AdminHomePage from "./AdminHomePage";
 
 const AdminPanel = () => {
-  const [activeTab, setActiveTab] = useState("students");
+  const [activeTab, setActiveTab] = useState("admin-home");
 
   return (
     <div className="admin-panel">
       <div className="admin-sidebar">
+      <button
+          className={`sidebar-btn ${activeTab === "admin-home" ? "active" : ""}`}
+          onClick={() => setActiveTab("admin-home")}
+        >
+          <FaHome className="sidebar-icon  m-2" />
+            خانه
+        </button>
         <button
           className={`sidebar-btn ${activeTab === "students" ? "active" : ""}`}
           onClick={() => setActiveTab("students")}
@@ -59,6 +67,7 @@ const AdminPanel = () => {
       </div>
 
       <div className="admin-content">
+        {activeTab === "admin-home" && <AdminHomePage />} 
         {activeTab === "students" && <StudentManagement />}
         {activeTab === "courses" && <CourseManagement />}
         {activeTab === "reports" && <Reports />}

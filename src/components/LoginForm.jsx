@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaUserGraduate, FaUserShield } from "react-icons/fa";
 
 import "../assets/css/common.css";
 import "../assets/css/signup.css";
@@ -163,8 +163,8 @@ function LoginForm() {
       "Unable to log in with provided credentials.":
         "نام کاربری یا رمز عبور اشتباه است.",
       "This field may not be blank.": "این فیلد نمی‌تواند خالی باشد.",
-      "username": "نام کاربری",
-      "password": "رمز عبور",
+      username: "نام کاربری",
+      password: "رمز عبور",
     };
 
     Object.keys(translations).forEach((key) => {
@@ -210,10 +210,13 @@ function LoginForm() {
               placeholder=" "
               required
             />
-            <label>
-              {userType === "student"
-                ? "شماره دانشجویی"
-                : "نام کاربری ادمین"}
+            <label className="student-or-admin">
+            {userType === "student" ? (
+                <FaUserGraduate className="label-icon" />
+              ) : (
+                <FaUserShield className="label-icon" />
+              )}
+              {userType === "student" ? "شماره دانشجویی" : "نام کاربری ادمین"}
             </label>
           </div>
 
@@ -227,7 +230,7 @@ function LoginForm() {
                 placeholder=" "
                 required
               />
-              <label className="ms-3">رمز عبور</label>
+              <label className="ms-2">رمز عبور</label>
               <span
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
@@ -253,7 +256,9 @@ function LoginForm() {
                 حساب ندارید؟ <Link to="/signup">ثبت‌نام</Link>
               </p>
               <p>
-              <a href="http://localhost:8000/accounts/api/v1/password_reset/">فراموشی رمز عبور</a>
+                <a href="http://localhost:8000/accounts/api/v1/password_reset/">
+                  فراموشی رمز عبور
+                </a>
               </p>
             </div>
           )}

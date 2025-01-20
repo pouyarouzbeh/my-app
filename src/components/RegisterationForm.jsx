@@ -1,4 +1,5 @@
-// RegistrationForm.jsx
+// src/components/RegistrationForm.jsx
+
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
   getCategory,
@@ -10,9 +11,9 @@ import {
 import { AuthContext } from "./context/AuthContext";
 import "../assets/css/common.css";
 import "../assets/css/registration.css";
-import moment from 'moment-jalaali'; // برای کار با تاریخ شمسی
-import Notification from "../components/adminpanel/Notification"; // ایمپورت Notification
-import { useNavigate } from "react-router-dom"; // ایمپورت useNavigate برای ریدایرکت
+import moment from 'moment-jalaali'; 
+import Notification from "../components/adminpanel/Notification"; 
+import { useNavigate } from "react-router-dom"; 
 
 const RegistrationForm = () => {
   const { user, loading } = useContext(AuthContext);
@@ -28,12 +29,12 @@ const RegistrationForm = () => {
   const [success, setSuccess] = useState(null);
   const [isDataLoading, setIsDataLoading] = useState(true);
 
-  const navigate = useNavigate(); // استفاده از useNavigate
+  const navigate = useNavigate(); 
 
   const calculateCurrentTerm = useCallback(() => {
     const today = moment();
     const jYear = today.jYear();
-    const jMonth = today.jMonth() + 1; // jMonth از 0 شروع می‌شود
+    const jMonth = today.jMonth() + 1; 
 
     // تعریف تاریخ شروع ترم اول و دوم
     // فرض بر این است که ترم اول از فروردین تا شهریور (ماه 1 تا 6) و ترم دوم از مهر تا اسفند (ماه 7 تا 12) است
@@ -79,7 +80,12 @@ const RegistrationForm = () => {
         setPermittedCourses(permitted);
       } catch (err) {
         console.error("خطا در دریافت داده‌های اولیه:", err.response?.data || err.message);
-        setError(err.response?.data || err.message);
+        // استخراج پیام خطا از پاسخ بک‌اند
+        if (err.response && err.response.data) {
+          setError(err.response.data.detail || err.response.data.message || "خطای نامشخص رخ داده است.");
+        } else {
+          setError("خطا در دریافت داده‌های اولیه.");
+        }
       } finally {
         setIsDataLoading(false); // اطمینان از اینکه در نهایت isDataLoading به false تنظیم می‌شود
       }
@@ -122,7 +128,12 @@ const RegistrationForm = () => {
         setPassedCourses(passed);
       } catch (err) {
         console.error("خطا در دریافت تاریخچه درس‌ها:", err.response?.data || err.message);
-        setError(err.response?.data || err.message);
+        // استخراج پیام خطا از پاسخ بک‌اند
+        if (err.response && err.response.data) {
+          setError(err.response.data.detail || err.response.data.message || "خطای نامشخص رخ داده است.");
+        } else {
+          setError("خطا در دریافت تاریخچه درس‌ها.");
+        }
       }
     };
 
@@ -187,7 +198,12 @@ const RegistrationForm = () => {
         setCategories(categoriesWithCourses);
       } catch (err) {
         console.error("خطا در دریافت دسته‌بندی‌ها و درس‌ها:", err.response?.data || err.message);
-        setError(err.response?.data || err.message);
+        // استخراج پیام خطا از پاسخ بک‌اند
+        if (err.response && err.response.data) {
+          setError(err.response.data.detail || err.response.data.message || "خطای نامشخص رخ داده است.");
+        } else {
+          setError("خطا در دریافت دسته‌بندی‌ها و درس‌ها.");
+        }
       }
     };
 
@@ -241,7 +257,7 @@ const RegistrationForm = () => {
   
     const registrationData = {
       term: currentTerm,
-      courses_id: selectedCourses.map((c) => c.id) 
+      courses_id: selectedCourses.map((c) => c.id),
     };
   
     console.log("داده‌های ثبت‌نام ارسال شده:", registrationData);
@@ -254,9 +270,9 @@ const RegistrationForm = () => {
         setSuccess("پیش ثبت‌نام شما با موفقیت انجام شد!");
         setSelectedCourses([]);
         setTotalUnits(0);
-        // ریدایرکت به صفحه اصلی پس از ۱ ثانیه
+        
         setTimeout(() => {
-          navigate("/"); // مسیر مورد نظر را تنظیم کنید
+          navigate("/"); 
         }, 1000);
       } else {
         console.error("پاسخ غیرمنتظره از سرور:", response);
@@ -265,17 +281,50 @@ const RegistrationForm = () => {
     } catch (error) {
       if (error.response) {
         console.error("خطا در ثبت پیش‌ثبت‌نام:", error.response.data);
-        // کیس‌بندی خطاها بر اساس محتوا
-        if (error.response.data.code === "PREREQUISITE_NOT_MET") {
-          setError("عدم رعایت پیش نیاز برای ثبت این درس.");
-        } else if (error.response.data.code === "MAX_UNITS_EXCEEDED") {
-          setError("تعداد واحد انتخابی از حد مجاز تجاوز کرده است.");
+  
+        
+        if (error.response.data.detail) {
+          setError(error.response.data.detail);
+  
+      
+        } else if (error.response.data.errors) {
+  
+          const errorObj = error.response.data.errors;
+          // می‌توانیم پیام‌ها را با هم در یک استرینگ جمع کنیم
+          const combinedErrors = Object.values(errorObj).join(" | ");
+          setError(combinedErrors);
+  
+       
+        } else if (error.response.data.code) {
+          switch (error.response.data.code) {
+            case "PREREQUISITE_NOT_MET":
+              setError("عدم رعایت پیش‌نیاز برای ثبت این درس.");
+              break;
+            case "MAX_UNITS_EXCEEDED":
+              setError("تعداد واحد انتخابی از حد مجاز تجاوز کرده است.");
+              break;
+            case "COURSE_NOT_PERMITTED":
+              setError("این درس برای شما مجاز نیست.");
+              break;
+            case "TERM_NOT_OPEN":
+              setError("ترم جاری برای ثبت‌نام باز نیست.");
+              break;
+            default:
+              setError(
+                error.response.data.message || "خطا در ثبت پیش‌ثبت‌نام."
+              );
+          }
+  
+        // در نهایت اگر هیچ‌کدام از فیلدهای بالا نبود
         } else {
-          setError(`خطا در ثبت پیش‌ثبت‌نام`);
+          setError(
+            error.response.data.message || 
+            "خطای ناشناخته در ثبت پیش‌ثبت‌نام رخ داده است."
+          );
         }
       } else if (error.request) {
         console.error("خطا در ثبت پیش‌ثبت‌نام: پاسخ سرور دریافت نشد.");
-        setError("خطا در ثبت پیش‌ثبت‌نام: پاسخ سرور دریافت نشد.");
+        setError("خطا در برقراری ارتباط با سرور. لطفاً دوباره تلاش کنید.");
       } else {
         console.error("خطا در ثبت پیش‌ثبت‌نام:", error.message);
         setError(`خطا در ثبت پیش‌ثبت‌نام: ${error.message}`);
@@ -284,6 +333,7 @@ const RegistrationForm = () => {
       setIsSubmitting(false);
     }
   };
+  
 
   // لاگ وضعیت‌های جاری برای دیباگ
   useEffect(() => {
@@ -315,11 +365,11 @@ const RegistrationForm = () => {
 
   // نمایش وضعیت بارگذاری
   if (loading || isDataLoading) {
-    return <div>در حال بارگذاری...</div>;
+    return <div className="loading">در حال بارگذاری...</div>;
   }
 
   if (!user?.isLoggedIn) {
-    return <div>لطفاً وارد حساب کاربری خود شوید.</div>;
+    return <div className="not-logged-in">لطفاً وارد حساب کاربری خود شوید.</div>;
   }
 
   return (
@@ -351,11 +401,33 @@ const RegistrationForm = () => {
         </div>
 
         <p className="registration-form-info">
-          سقف واحد مجاز: <strong>{user.max_units}</strong> {/* استفاده از user.max_units */}
+          سقف واحد مجاز: <strong>{user.max_units}</strong> 
         </p>
         <p className="registration-form-info mb-4">
           واحدهای انتخاب‌شده: <strong>{totalUnits}</strong>
         </p>
+
+        
+        <div className="selected-courses-section mb-4">
+          <h4>دروس انتخاب‌شده:</h4>
+          {selectedCourses.length === 0 ? (
+            <p>هیچ درسی انتخاب نشده است.</p>
+          ) : (
+            <ul className="list-group">
+              {selectedCourses.map(course => (
+                <li key={course.id} className="list-group-item d-flex justify-content-between align-items-center m-1">
+                  {course.name} ({course.credit} واحد)
+                  <button
+                    className="btn btn-sm btn-danger ]"
+                    onClick={() => handleCourseToggle(course)}
+                  >
+                    حذف
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         <div className="accordion registration-accordion" id="courseAccordion">
           {categories.length === 0 ? (

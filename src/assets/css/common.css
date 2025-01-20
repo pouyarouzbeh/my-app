@@ -68,7 +68,8 @@ body {
 }
 
 .navbar-toggler-icon::after {
-  top: 8px;
+  top: 10px;
+  right: 4px;
 }
 
 /* Navbar Links */
@@ -119,6 +120,14 @@ body {
 .dropdown-toggle::after{
   background-color: #677684;
   transform: translateY(-2px);
+}
+
+
+.dropdown-toggle::after{
+  background: none;
+  position: relative;
+  top: 4px;
+  right: 2px;
 }
 
 .dropdown-menu {

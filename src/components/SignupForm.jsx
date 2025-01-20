@@ -1,10 +1,12 @@
 // SignupForm.jsx
 import React, { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaCloud, FaEye, FaEyeSlash,FaUserGraduate} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../utils/api";
 import Pic1 from "../assets/pics/Component 1.png";
 import Pic2 from "../assets/pics/Component 2.png";
+import Notification from "./adminpanel/Notification";
+
 
 function SignupForm() {
   const [studentNumber, setStudentNumber] = useState("");
@@ -15,6 +17,8 @@ function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const navigate = useNavigate();
 
@@ -37,12 +41,11 @@ function SignupForm() {
         username: studentNumber,
         email: email,
         password: password,
-        password1: confirmPassword, 
+        password1: confirmPassword,
       });
 
       console.log("ثبت‌نام با موفقیت انجام شد:", res);
-    
-      navigate("/verify-account");
+      setSuccessMessage("ثبت نام شما با موفقیت انجام شد. لطفا صبر کنید تا به صفحه ورود هدایت شوید");
     } catch (err) {
       console.error(err);
       if (err.response?.status === 400) {
@@ -57,6 +60,17 @@ function SignupForm() {
 
   return (
     <div className="container whole_page">
+      {successMessage && (
+        <Notification
+          message={successMessage}
+          type="success"
+          onClose={() => {
+            setSuccessMessage(null);
+            navigate("/login");
+          }}
+        />
+      )}
+
       <img src={Pic1} alt="تصویر شماره 1" className="pic pic1" />
       <div className="login-form">
         <form className="form1" onSubmit={handleSubmit}>
@@ -74,7 +88,7 @@ function SignupForm() {
               title="شماره دانشجویی باید ده رقم باشد"
               required
             />
-            <label htmlFor="student-number">شماره دانشجویی</label>
+            <label htmlFor="student-number" className="student-or-admin"><FaUserGraduate className="label-icon" />شماره دانشجویی</label>
           </div>
 
           <div className="form-group">
@@ -86,7 +100,7 @@ function SignupForm() {
               placeholder=" "
               required
             />
-            <label htmlFor="email">ایمیل</label>
+            <label htmlFor="email" className="student-or-admin"><FaCloud className="label-icon" />ایمیل</label>
           </div>
 
           <div className="form-group password-group">
@@ -101,12 +115,14 @@ function SignupForm() {
                 placeholder=" "
                 required
               />
-              <label htmlFor="password" className="ms-3">رمز عبور</label>
+              <label htmlFor="password" className="ms-2">
+                رمز عبور
+              </label>
               <span
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                {showPassword ? <FaEyeSlash/> : <FaEye />}
               </span>
             </div>
           </div>
@@ -121,7 +137,9 @@ function SignupForm() {
                 placeholder=" "
                 required
               />
-              <label htmlFor="confirm-password" className="ms-3">تایید رمز عبور</label>
+              <label htmlFor="confirm-password" className="ms-2">
+                تایید رمز عبور
+              </label>
               <span
                 className="password-toggle"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -133,7 +151,11 @@ function SignupForm() {
 
           {error && <p className="error_message">{error}</p>}
 
-          <button type="submit" className="btn btn1 w-100 mb-2" disabled={isLoading}>
+          <button
+            type="submit"
+            className="btn btn1 w-100 mb-2"
+            disabled={isLoading}
+          >
             {isLoading ? "در حال ثبت‌نام..." : "ثبت نام"}
           </button>
         </form>

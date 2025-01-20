@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import "../../assets/css/administrator.css";
 import {
-  getUsers,         
-  getAllProfiles,   
+  getUsers,
+  getAllProfiles,
   postUser,
   updateUserById,
   deleteUserById
@@ -12,8 +12,8 @@ import {
 import Notification from "./Notification";
 
 import { Modal, Button, Form, InputGroup } from "react-bootstrap";
-import { FaEye, FaEyeSlash, FaSearch } from "react-icons/fa"; // وارد کردن آیکون‌ها
-import { AuthContext } from "../../components/context/AuthContext"; // وارد کردن AuthContext
+import { FaEye, FaEyeSlash, FaSearch } from "react-icons/fa"; 
+import { AuthContext } from "../../components/context/AuthContext"; 
 
 const StudentManagement = () => {
   const [students, setStudents] = useState([]);  // فهرست کاربران + پروفایل
@@ -21,12 +21,16 @@ const StudentManagement = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Modal State
+  // Modal State (برای به‌روزرسانی)
   const [showModal, setShowModal] = useState(false);
   const [currentStudent, setCurrentStudent] = useState(null);
   const [modalUsername, setModalUsername] = useState("");
   const [modalEmail, setModalEmail] = useState("");
-  const [ModalPassword, setModalPassword] = useState("");
+  const [modalPassword, setModalPassword] = useState("");
+
+  // دو state جدید برای مدال حذف
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState(null);
 
   // State for Search
   const [searchQuery, setSearchQuery] = useState("");
@@ -223,7 +227,7 @@ const StudentManagement = () => {
     const updatedUser = {
       username: modalUsername.trim(),
       email: modalEmail.trim(),
-      password: ModalPassword.trim()
+      password: modalPassword.trim()
     };
 
     if (!updatedUser.username || !updatedUser.email || !updatedUser.password) {
@@ -266,24 +270,34 @@ const StudentManagement = () => {
   };
 
   // =========================================================================
-  //  حذف کاربر
+  //  حذف کاربر با استفاده از مدال
   // =========================================================================
-  const handleRemoveStudent = async (username) => {
-    if (!window.confirm("آیا مطمئن هستید می‌خواهید این دانشجو را حذف کنید؟")) {
-      return;
-    }
+  const handleRemoveStudent = (stu) => {
+    // این تابع فقط مدال را باز می‌کند و studentToDelete را ست می‌کند
+    setStudentToDelete(stu);
+    setShowDeleteModal(true);
+  };
+
+  // =========================================================================
+  //  تایید حذف کاربر از مدال
+  // =========================================================================
+  const handleConfirmDelete = async () => {
+    if (!studentToDelete) return;
 
     setLoading(true);
     setError("");
     setSuccess("");
 
     try {
-      console.log("در حال حذف دانشجو:", username);
-      await deleteUserById(username);
+      console.log("در حال حذف دانشجو:", studentToDelete.username);
+      await deleteUserById(studentToDelete.username);
       setSuccess("دانشجو با موفقیت حذف شد.");
 
       // به‌روزرسانی لیست دانشجویان در state
-      setStudents(prev => prev.filter(stu => stu.username !== username));
+      setStudents(prev => prev.filter(stu => stu.username !== studentToDelete.username));
+
+      // بستن مدال حذف
+      handleCloseDeleteModal();
     } catch (err) {
       console.error("خطا در حذف دانشجو:", err);
       setError(err.response?.data?.message || "خطا در حذف دانشجو.");
@@ -293,12 +307,20 @@ const StudentManagement = () => {
   };
 
   // =========================================================================
+  //  بستن مدال حذف
+  // =========================================================================
+  const handleCloseDeleteModal = () => {
+    setStudentToDelete(null);
+    setShowDeleteModal(false);
+  };
+
+  // =========================================================================
   //  رابط کاربری (رندر)
   // =========================================================================
   return (
     <div className="container management-container">
       <h2 className="my-4">مدیریت دانشجویان</h2>
-
+  
       {/* اعلان خطا یا موفقیت */}
       {error && (
         <Notification
@@ -315,7 +337,7 @@ const StudentManagement = () => {
         />
       )}
       {loading && <p className="text-info">در حال بارگذاری...</p>}
-
+  
       {/* فیلد جستجو با InputGroup و آیکون جستجو */}
       <div className="row g-3 mb-4">
         <div className="col-md-4">
@@ -333,7 +355,7 @@ const StudentManagement = () => {
           </InputGroup>
         </div>
       </div>
-
+  
       {/* فرم افزودن دانشجو */}
       <form onSubmit={handleAddStudent} className="row g-3 mb-4">
         <div className="col-sm-6 col-md-2">
@@ -345,7 +367,7 @@ const StudentManagement = () => {
             required
           />
         </div>
-        <div className="col-sm-6 col-md-2">
+        <div className="col-sm-6 col-md-3">
           <input
             type="email"
             name="email"
@@ -354,7 +376,7 @@ const StudentManagement = () => {
             required
           />
         </div>
-
+  
         {/* فیلد پسورد با InputGroup */}
         <div className="col-sm-6 col-md-2">
           <InputGroup>
@@ -374,7 +396,7 @@ const StudentManagement = () => {
             </InputGroup.Text>
           </InputGroup>
         </div>
-
+  
         {/* فیلد تأیید پسورد با InputGroup */}
         <div className="col-sm-6 col-md-2">
           <InputGroup>
@@ -394,61 +416,72 @@ const StudentManagement = () => {
             </InputGroup.Text>
           </InputGroup>
         </div>
-
-        <div className="col-sm-6 col-md-2 text-end">
+  
+        <div className="col-sm-6 col-md-3 mx-auto">
           <button type="submit" className="btn btn-success add_student w-100" disabled={loading}>
             افزودن دانشجو
           </button>
         </div>
       </form>
-
-      
-
-      {/* لیست دانشجویان */}
-      <ul className="list-group">
-        {students.length > 0 ? (
-          students
-            .filter((stu) => 
-              stu.username.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-            .map((stu) => {
-              const fullName = [stu.first_name, stu.last_name].filter(Boolean).join(" ");
-              const phoneOrEmpty = stu.phone_number ? `تلفن: ${stu.phone_number}` : "";
-
-              return (
-                <li
-                  key={stu.username}
-                  className="list-group-item d-flex justify-content-between align-items-center"
-                >
-                  <div>
-                    <strong>{stu.username}</strong> - {stu.email}
-                    {fullName && ` / ${fullName}`}
-                    {phoneOrEmpty && ` / ${phoneOrEmpty}`}
-                  </div>
-                  <div>
-                    <button
-                      onClick={() => handleOpenUpdateModal(stu)}
-                      className="btn btn-primary edit_student_button btn-sm me-2 m-2"
-                      disabled={loading}
-                    >
-                      به‌روزرسانی
-                    </button>
-                    <button
-                      onClick={() => handleRemoveStudent(stu.username)}
-                      className="btn btn-danger remove_student_button btn-sm m-2"
-                      disabled={loading}
-                    >
-                      حذف
-                    </button>
-                  </div>
-                </li>
-              );
-            })
-        ) : (
-          <li className="list-group-item">هیچ دانشجویی موجود نیست.</li>
-        )}
-      </ul>
-
+  
+      {/* جدول دانشجویان */}
+      <div className="table-responsive">
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th className="text-center">شماره دانشجویی</th>
+              <th className="text-center">ایمیل</th>
+              <th className="text-center">نام کامل</th>
+              <th className="text-center">تلفن</th>
+              <th className="text-center">عملیات</th>
+            </tr>
+          </thead>
+          <tbody>
+            {students.length > 0 ? (
+              students
+                .filter((stu) =>
+                  stu.username.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+                .map((stu) => {
+                  const fullName = [stu.first_name, stu.last_name].filter(Boolean).join(" ");
+                  const phoneOrEmpty = stu.phone_number ? ` ${stu.phone_number}` : "";
+  
+                  return (
+                    <tr key={stu.username} className="text-center">
+                      <td className="text-center">{stu.username}</td>
+                      <td className="text-center">{stu.email}</td>
+                      <td className="text-center">{fullName || "ثبت نشده "}</td>
+                      <td className="text-center">{phoneOrEmpty || "ثبت نشده "}</td>
+                      <td className="text-center">
+                        <button
+                          onClick={() => handleOpenUpdateModal(stu)}
+                          className="btn btn-primary btn-sm me-2 edit_student_button"
+                          disabled={loading}
+                        >
+                          به‌روزرسانی
+                        </button>
+                        <button
+                          onClick={() => handleRemoveStudent(stu)}
+                          className="btn btn-danger btn-sm remove_student_button"
+                          disabled={loading}
+                        >
+                          حذف
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center">
+                  هیچ دانشجویی موجود نیست.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+  
       {/* Update Modal using React Bootstrap */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Form onSubmit={handleSubmitUpdate}>
@@ -478,10 +511,9 @@ const StudentManagement = () => {
               <Form.Label>رمز عبور</Form.Label>
               <Form.Control
                 type="password"
-                value={ModalPassword}
+                value={modalPassword}
                 onChange={(e) => setModalPassword(e.target.value)}
                 required
-                
               />
             </Form.Group>
           </Modal.Body>
@@ -495,8 +527,37 @@ const StudentManagement = () => {
           </Modal.Footer>
         </Form>
       </Modal>
+  
+      {/* مدال حذف دانشجو */}
+      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>حذف دانشجو</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {studentToDelete ? (
+            <>
+              <p>
+                آیا مطمئن هستید که می‌خواهید دانشجو با شماره دانشجویی{" "}
+                <strong>{studentToDelete.username}</strong> را حذف کنید؟
+              </p>
+              <p className="text-danger">این عمل قابل بازگشت نیست!</p>
+            </>
+          ) : (
+            <p>در حال بارگذاری...</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseDeleteModal} disabled={loading}>
+            انصراف
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDelete} disabled={loading}>
+            حذف
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
+  
 };
 
 export default StudentManagement;

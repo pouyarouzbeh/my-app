@@ -1,9 +1,9 @@
 // Notification.jsx
 import React, { useEffect } from "react";
-import "./notification.css"; // فایل استایل برای انیمیشن
+import "./notification.css"; 
 
 const Notification = ({ message, type, onClose }) => {
-  // پس از 3 ثانیه خودکار پیام بسته می‌شود
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
